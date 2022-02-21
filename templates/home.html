@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DoorFront Detection AI</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .content {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        color: #3f3d56;
+      }
+      .left {
+        flex-grow: 1;
+        background-color: black;
+        color: whitesmoke;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .left .title {
+        margin-bottom: 50px;
+      }
+      .left form label {
+        font-size: 20px;
+      }
+      .left .url {
+        width: 500px;
+      }
+      .left .btn {
+        border: none;
+        background-color: #d6974d;
+        color: white;
+        padding: 10px;
+        display: block;
+        margin: 0 auto;
+        margin-top: 20px;
+        width: 200px;
+        cursor: pointer;
+        border-radius: 10px;
+        font-size: 20px;
+      }
+      .right {
+        flex-grow: 1;
+        overflow-y: scroll;
+        border-left: 1px solid black;
+        background-color: ghostwhite;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="content">
+      <div class="left">
+        <h1 class="title">Welcome to DoorFront detection AI</h1>
+        <form action="/home_detect" id="my_form" method="post">
+          <label for="nms">NMS IoU Threshold: </label>
+          <input id="nms" type="nms" name="nms" placeholder="0.2" />
+          <br />
+          <br />
+          <label for="url">Image URL: </label>
+          <br />
+          <input
+            id="url"
+            type="url"
+            name="url"
+            class="url"
+            placeholder="Please enter image url here..."
+          />
+          <br />
+          <button class="btn">Detect</button>
+        </form>
+      </div>
+      <div class="right">
+        <div class="result">
+          {% if not empty %}
+          <h4>Detected Time: {{time}} s</h4>
+          <div>
+            {% for label in label_list %}
+            <div class="ui segment">
+              <pre>{{ label }}</pre>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <h3>Empty</h3>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

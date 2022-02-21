@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DoorFront Detection AI</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .content {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        color: #3f3d56;
+      }
+      .left {
+        flex-grow: 1;
+        background-color: black;
+        color: whitesmoke;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .left .title {
+        margin-bottom: 50px;
+      }
+      .left form label {
+        font-size: 20px;
+      }
+      .left .url {
+        width: 500px;
+      }
+      .left .btn {
+        border: none;
+        background-color: #d6974d;
+        color: white;
+        padding: 10px;
+        display: block;
+        margin: 0 auto;
+        margin-top: 20px;
+        width: 200px;
+        cursor: pointer;
+        border-radius: 10px;
+        font-size: 20px;
+      }
+      .right {
+        flex-grow: 1;
+        overflow-y: scroll;
+        border-left: 1px solid black;
+        background-color: ghostwhite;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="content">
+      <div class="left">
+        <h1 class="title">Welcome to DoorFront detection AI</h1>
+        <form action="/test" id="my_form" method="post">
+          <label for="nms">NMS IoU Threshold: </label>
+          <input id="nms" type="nms" name="nms" placeholder="0.2" />
+          <br />
+          <br />
+          <label for="url">Image URL: </label>
+          <br />
+          <input
+            id="url"
+            type="url"
+            name="url"
+            class="url"
+            placeholder="Please enter image url here..."
+          />
+          <br />
+          <button class="btn">Detect</button>
+        </form>
+      </div>
+      <div class="right">
+        <div class="loading" style="display: none">
+          <p>Detecting...</p>
+        </div>
+        <div class="result"></div>
+      </div>
+    </main>
+
+    <script>
+      let isLoading = false;
+      let startTime = null;
+
+      const my_form = document.querySelector("#my_form");
+      const loading_el = document.querySelector(".loading");
+      const result_el = document.querySelector(".result");
+      const nms_input = document.querySelector("#nms");
+      const url_input = document.querySelector("#url");
+      my_form.addEventListener("submit", handleSubmit);
+
+      function createTimeH3() {
+        const h_3 = document.createElement("h3");
+        h_3.innerHTML = get_time_diff(startTime);
+        return h_3;
+      }
+      function createPreELm(data) {
+        const pre = document.createElement("pre");
+        pre.innerHTML = JSON.stringify(data, undefined, 2) + ",";
+        return pre;
+      }
+
+      async function renderResult() {
+        try {
+          const postData = { nms: nms_input.value, url: url_input.value };
+          console.log("postData -> ", postData);
+          const result = await fetch("/detect", {
+            method: "POST",
+            body: postData,
+          });
+          console.log(result);
+          loading_el.style.display = "none";
+          result_el.append(createTimeH3());
+          isLoading = false;
+          // mock_data.forEach((item) => {
+          //   result_el.append(createPreELm(item));
+          // });
+        } catch (e) {
+          console.log("error", e);
+        }
+      }
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        if (nms_input.value && url_input.value) {
+          isLoading = !isLoading;
+          if (isLoading) {
+            loading_el.style.display = "block";
+            result_el.innerHTML = "";
+            startTime = new Date().getTime();
+            renderResult();
+          }
+        } else {
+          alert("Please enter NMS and URL");
+        }
+      }
+
+      function get_time_diff(time) {
+        var diff = "Detected Time: ";
+        var time_diff = new Date().getTime() - time;
+        console.log(time_diff);
+        var seconds = Math.round(time_diff / 1000);
+        if (seconds > 0) {
+          diff += seconds + "s";
+        } else {
+          if (diff !== "") {
+            diff += seconds + "s";
+          }
+        }
+
+        return diff;
+      }
+    </script>
+  </body>
+</html>
