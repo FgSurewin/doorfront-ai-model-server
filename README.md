@@ -41,7 +41,7 @@ pip install "git+https://github.com/philferriere/cocoapi.git#egg=pycocotools&sub
 python main.py
 ```
 
-Now, you can test the model through webpage `localhost:8080`
+Now, you can test the model through webpage `localhost:5000`
 (Copy this link to any browser and hit enter)
 
 ## 2. Docker Image
@@ -76,9 +76,9 @@ docker build -t doorfront-ai-model .
 
 ### 2.4 Run model
 ```bash
-docker run -it -p 8080:8080 --name doorfront-model doorfront-ai-model
+docker run -it -p 5000:5000 --name doorfront-model doorfront-ai-model
 ```
-Now, you can test the model through webpage `localhost:8080`
+Now, you can test the model through webpage `localhost:5000`
 (Copy this link to any browser and hit enter)
 
 ### End.
